@@ -340,10 +340,10 @@ service bind9 restart
 ```
 ## No.8
 Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
-Nama Algoritma Load Balancer
-Report hasil testing pada Apache Benchmark
-Grafik request per second untuk masing masing algoritma. 
-Analisis
+- Nama Algoritma Load Balancer
+- Report hasil testing pada Apache Benchmark
+- Grafik request per second untuk masing masing algoritma. 
+- Analisis
 ```
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
 
