@@ -131,6 +131,106 @@ iface eth0 inet static
 Pulau Paradis dan Marley, sama-sama menghadapi ancaman besar dari satu sama lain. Keduanya membangun infrastruktur pertahanan yang kuat untuk melindungi sistem vital mereka. Dengan strategi yang matang, mereka bersiap menghadapi serangan dan mempertahankan wilayah masing-masing.
 Bangsa Marley, dipimpin oleh Zeke, telah mempersiapkan Annie, Bertholdt, dan Reiner untuk menyerang menggunakan Laravel Worker. Di sisi lain, Klan Eldia dari Paradis telah mempersiapkan Armin, Eren, dan Mikasa sebagai PHP Worker untuk mempertahankan pulau tersebut. Warhammer bertindak sebagai Database Server, sementara Beast dan Colossal sebagai Load Balancer.
 
+### Bash Files
+
+- Paradis (DHCP Relay)
+
+```bash
+apt-get update
+apt install isc-dhcp-relay -y
+service isc-dhcp-relay start
+```
+
+- Tybur (DHCP Server)
+
+```bash
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf   # DNS Server
+apt-get update
+apt install isc-dhcp-server -y
+echo INTERFACES="eth0" > /etc/default/isc-dhcp-server
+echo 'nameserver 192.235.4.3' > /etc/resolv.conf
+```
+
+- Fritz (DNS Server)
+
+```bash
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+apt-get update
+apt-get install bind9 -y
+```
+
+- Warhammer (Database Server)
+
+```bash
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update
+apt-get install mariadb-server -y
+service mysql start
+```
+
+- Colossal (Load Balancer)
+
+```bash
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+apt-get update
+apt-get install apache2-utils -y
+apt-get install php7.3 php-fpm -y
+apt-get install nginx -y
+apt-get install lynx -y
+
+echo 'nameserver 192.235.4.3' > /etc/resolv.conf
+```
+
+- Armin, Eren, Mikasa (PHP Worker)
+
+```bash
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update
+apt-get install nginx -y
+apt-get install wget -y
+apt-get install unzip -y
+apt-get install lynx -y
+apt-get install htop -y
+apt-get install apache2-utils -y
+apt-get install php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc php7.3-gd php7.3-xml php7.3-cli php7.3-zip -y
+echo 'nameserver 192.235.4.3' > /etc/resolv.conf   # DNS Server
+
+service nginx start
+service php7.3-fpm start
+```
+
+- Annie, Bertholdt, Reiner (Laravel Worker)
+
+```bash
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+apt-get update
+apt-get install mariadb-client -y
+apt-get install lynx -y
+apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.li$apt-get update
+apt-get install php8.0-mbstring php8.0-xml php8.0-cli php8.0-common php8.0-intl php8.0-opcache php8.0-readline php8.0-mysql php8.0-fpm php8.0-curl $apt-get install nginx -y
+wget https://getcomposer.org/download/2.0.13/composer.phar
+chmod +x composer.phar
+mv composer.phar /usr/bin/composer
+apt-get install git -y
+git clone https://github.com/martuafernando/laravel-praktikum-jarkom /var/www/laravel-praktikum-jarkom
+composer update
+composer install
+```
+
+- Zeke, Erwin (Client)
+
+```bash
+apt update
+apt install lynx -y
+apt install htop -y
+apt install apache2-utils -y
+apt-get install jq -y
+```
+
 ## No. 1
 Pulau Paradis telah menjadi tempat yang damai selama 1000 tahun, namun kedamaian tersebut tidak bertahan selamanya. Perang antara kaum Marley dan Eldia telah mencapai puncak. Kaum Marley yang dipimpin oleh Zeke, me-register domain name marley.yyy.com untuk worker Laravel mengarah pada Annie. Namun ternyata tidak hanya kaum Marley saja yang berinisiasi, kaum Eldia ternyata sudah mendaftarkan domain name eldia.yyy.com untuk worker PHP (0) mengarah pada Armin.
 
@@ -269,6 +369,14 @@ subnet 192.235.4.0 netmask 255.255.255.0 {
 
 service isc-dhcp-server restart
 ```
+
+### Bentuk Hasil No 2-5
+
+![image](https://github.com/user-attachments/assets/a72d38a1-e286-4dfc-9bba-f6f8ab5e60f5)
+
+![image](https://github.com/user-attachments/assets/525c7dac-7b91-42ea-8295-f69c854017b1)
+
+
 ## No.6
 Armin berinisiasi untuk memerintahkan setiap worker PHP untuk melakukan konfigurasi virtual host untuk website berikut https://intip.in/BangsaEldia dengan menggunakan php 7.3 
 ```
@@ -301,6 +409,16 @@ echo 'server {
 service php7.3-fpm restart
 service nginx restart
 ```
+
+### Bentuk Hasil No 6
+
+![image](https://github.com/user-attachments/assets/1bff8f2e-a033-487d-9a33-f4a51c12cd0a)
+
+![image](https://github.com/user-attachments/assets/5bf301de-7403-41ec-a18f-d5b2767468a6)
+
+![image](https://github.com/user-attachments/assets/6a4f6ac2-078f-4a1e-81b3-68860c117a80)
+
+
 ## No.7
 Dikarenakan Armin sudah mendapatkan kekuatan titan colossal, maka bantulah kaum eldia menggunakan colossal agar dapat bekerja sama dengan baik. Kemudian lakukan testing dengan 6000 request dan 200 request/second.
 ```
@@ -338,6 +456,11 @@ www     IN      CNAME   eldia.it04.com.' > /etc/bind/sites/eldia.it04.com
 
 service bind9 restart
 ```
+
+### Bentuk Hasil No 7
+
+![image](https://github.com/user-attachments/assets/3c40066c-884e-4db3-b142-3b982e56c385)
+
 ## No.8
 Karena Erwin meminta “laporan kerja Armin”, maka dari itu buatlah analisis hasil testing dengan 1000 request dan 75 request/second untuk masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
 - Nama Algoritma Load Balancer
@@ -375,6 +498,22 @@ rm /etc/nginx/sites-enabled/default
 
 service nginx restart
 ```
+### Bentuk Hasil No 8
+
+#### Round Robin
+
+![image](https://github.com/user-attachments/assets/64f9b67b-675d-4e5f-8a23-583200dda391)
+
+
+#### IP Hash
+
+![image](https://github.com/user-attachments/assets/f806b6eb-78cd-45b1-8df6-9a909d13a48a)
+
+
+#### Least Connection
+
+![image](https://github.com/user-attachments/assets/d515d6d8-0976-46ba-8531-e97d5957f614)
+
 ## No.9 
 Dengan menggunakan algoritma Least-Connection, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 1000 request dengan 10 request/second, kemudian tambahkan grafiknya pada “laporan kerja Armin”.
 ```
@@ -407,6 +546,22 @@ rm /etc/nginx/sites-enabled/default
 
 service nginx restart
 ```
+
+### Bentuk Hasil No 9
+
+#### 3 Worker
+
+![image](https://github.com/user-attachments/assets/26d8ef94-8142-4551-867f-8c6c6e1e6fb1)
+
+
+#### 2 Worker
+
+![image](https://github.com/user-attachments/assets/ab2ddbeb-6360-49d3-9bdf-4e1088d778f3)
+
+
+#### 1 Worker
+![image](https://github.com/user-attachments/assets/675effdf-d249-4156-9bc7-6264245653f4)
+
 ## No.10
 Selanjutnya coba tambahkan keamanan dengan konfigurasi autentikasi di Colossal dengan dengan kombinasi username: “arminannie” dan password: “jrkmyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/supersecret/ 
 ```
@@ -438,6 +593,16 @@ server {
 }' > /etc/nginx/sites-available/lb_php
 service nginx restart
 ```
+
+### Bentuk Hasil No 10
+
+![image](https://github.com/user-attachments/assets/5c0636e8-0b20-4d14-859a-1e2ae45e076b)
+
+![image](https://github.com/user-attachments/assets/50db2e99-42e5-4dfc-b948-a61070211d82)
+
+![image](https://github.com/user-attachments/assets/f5491736-0a60-44c0-a5f6-219a35608e5a)
+
+
 ## No.11
 Lalu buat untuk setiap request yang mengandung /titan akan di proxy passing menuju halaman https://attackontitan.fandom.com/wiki/Attack_on_Titan_Wiki
 ```
@@ -473,6 +638,11 @@ ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
 
 service nginx restart
 ```
+
+### Bentuk Hasil No 11
+
+![image](https://github.com/user-attachments/assets/c9cde661-b2bc-4c9c-8964-dd6686d16080)
+
 ## No.12
 Selanjutnya Colossal ini hanya boleh diakses oleh client dengan IP [Prefix IP].1.77, [Prefix IP].1.88, [Prefix IP].2.144, dan [Prefix IP].2.156
 ### Colossal.sh
@@ -553,6 +723,12 @@ fixed-address 192.235.2.156;
 
 service isc-dhcp-server restart
 ```
+
+### Bentuk Hasil No 12
+
+![image](https://github.com/user-attachments/assets/038449d8-efec-4074-a20e-17353f985075)
+
+![image](https://github.com/user-attachments/assets/68026447-02da-40af-aa84-16e76fda33e3)
 
 
 
